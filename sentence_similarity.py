@@ -1,13 +1,3 @@
-"""
-This examples trains BERT (or any other transformer model like RoBERTa, DistilBERT etc.) for the STSbenchmark from scratch. It generates sentence embeddings
-that can be compared using cosine-similarity to measure the similarity.
-
-Usage:
-python training_nli.py
-
-OR
-python training_nli.py pretrained_transformer_model_name
-"""
 from torch.utils.data import DataLoader
 import math
 from sentence_transformers import SentenceTransformer,  LoggingHandler, losses, models, util
@@ -20,24 +10,16 @@ import os
 import gzip
 import csv
 
-#### Just some code to print debug information to stdout
 logging.basicConfig(format='%(asctime)s - %(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S',
                     level=logging.INFO,
                     handlers=[LoggingHandler()])
-#### /print debug information to stdout
 
-
-
-#Check if dataset exsist. If not, download and extract  it
 sts_dataset_path = 'datasets/stsbenchmark.tsv.gz'
 
 if not os.path.exists(sts_dataset_path):
     util.http_get('https://sbert.net/datasets/stsbenchmark.tsv.gz', sts_dataset_path)
 
-
-
-#You can specify any huggingface/transformers pre-trained model here, for example, bert-base-uncased, roberta-base, xlm-roberta-base
 model_name = 'roberta-base'
 
 # Read the dataset
@@ -96,13 +78,6 @@ model.fit(train_objectives=[(train_dataloader, train_loss)],
           evaluation_steps=1000,
           warmup_steps=warmup_steps,
           output_path=model_save_path)
-
-
-##############################################################################
-#
-# Load the stored model and evaluate its performance on STS benchmark dataset
-#
-##############################################################################
 
 model = SentenceTransformer(model_save_path)
 test_evaluator = EmbeddingSimilarityEvaluator.from_input_examples(test_samples, name='sts-test')
