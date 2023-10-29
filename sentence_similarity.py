@@ -65,8 +65,6 @@ train_loss = losses.CosineSimilarityLoss(model=model)
 logging.info("Read STSbenchmark dev dataset")
 evaluator = EmbeddingSimilarityEvaluator.from_input_examples(dev_samples, name='sts-dev')
 
-
-# Configure the training. We skip evaluation in this example
 warmup_steps = math.ceil(len(train_dataloader) * num_epochs * 0.1) #10% of train datasets for warm-up
 logging.info("Warmup-steps: {}".format(warmup_steps))
 
